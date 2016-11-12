@@ -15,7 +15,8 @@ var Main = React.createClass({
 	getInitialState: function(){
 		return {
 			searchTerm: "",
-			results: ""
+			results: "",
+			query: []
 		}
 	},	
 
@@ -41,9 +42,9 @@ var Main = React.createClass({
 						this.setState({
 							results: data
 						})		
-					}
+					
 // After we've received the result... then post the search term to our history. 
-						helpers.postHistory(this.state.searchTerm)
+						helpers.postArticle(this.state.searchTerm)
 							.then(function(data){
 								console.log("Updated!");
 
