@@ -5,9 +5,9 @@ var Router = Router.Route;
 
 var IndexRoute = Router.IndexRoute;
 //Reference the high level componants
-var Main = require('../components/Main');
-var Search = require('../components/Search');
-var Saved = require('../components/Saved');
+var Main = require('../Components/Main');
+var Search = require('../Components/Search');
+var Saved = require('../Components/Saved');
 
 module.exports =(
 

@@ -51,8 +51,9 @@
 	var ReactDOM = __webpack_require__(158);
 
 	// Include the Main Component
-	var Main = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../Components/Main\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-
+	var Main = __webpack_require__(159);
+	var Search = __webpack_require__(162);
+	var Saved = __webpack_require__(164);
 	// This code here allows us to render our main component (in this case "Main")
 	ReactDOM.render(React.createElement(Main, null), document.getElementById('app'));
 
@@ -19749,6 +19750,513 @@
 
 	module.exports = __webpack_require__(3);
 
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	// Include React 
+	var React = __webpack_require__(1);
+
+	// Here we include all of the sub-components
+	var Query = __webpack_require__(160);
+	var Results = __webpack_require__(161);
+
+	// Helper Function
+	var helpers = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./utils/helpers.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	// This is the main component. 
+	var Main = React.createClass({
+		displayName: 'Main',
+
+
+		// Here we set a generic state associated with the number of clicks
+		getInitialState: function getInitialState() {
+			return {
+				searchTerm: "",
+				results: "",
+				query: []
+			};
+		},
+
+		setTerm: function setTerm(term) {
+			this.setState({
+				searchTerm: term
+			});
+		},
+
+		// If the 
+		componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+
+			if (prevState.searchTerm != this.state.searchTerm) {
+				console.log("UPDATED");
+
+				helpers.runQuery(this.state.searchTerm).then(function (data) {
+					if (data != this.state.results) {
+
+						console.log(data);
+
+						this.setState({
+							results: data
+						});
+
+						// After we've received the result... then post the search term to our history. 
+						helpers.postArticle(this.state.searchTerm).then(function (data) {
+							console.log("Updated!");
+
+							// After we've done the post... then get the updated history
+							helpers.getArticle().then(function (response) {
+								console.log("Current Article", response.data);
+								if (response != this.state.article) {
+									console.log("article", response.data);
+
+									this.setState({
+										article: response.data
+									});
+								}
+							}.bind(this));
+						}.bind(this));
+					}
+				}.bind(this));
+			}
+		},
+
+		// The moment the page renders get the History
+		componentDidMount: function componentDidMount() {
+
+			// Get the latest history.
+			helpers.getArticle().then(function (response) {
+				if (response != this.state.article) {
+					console.log("Article", response.data);
+
+					this.setState({
+						article: response.data
+					});
+				}
+			}.bind(this));
+		},
+
+		// Here we render the function
+		render: function render() {
+
+			return React.createElement(
+				'div',
+				{ className: 'container' },
+				React.createElement(
+					'div',
+					{ className: 'row' },
+					React.createElement(
+						'div',
+						{ className: 'jumbotron' },
+						React.createElement(
+							'h1',
+							{ className: 'text-center' },
+							'New York Times Article Scrubber'
+						),
+						React.createElement(
+							'p',
+							{ className: 'text-center' },
+							React.createElement(
+								'em',
+								null,
+								'Search for and annotate articles of interest!'
+							)
+						)
+					),
+					React.createElement(
+						'div',
+						{ className: 'panel-body' },
+						React.createElement(
+							'form',
+							null,
+							React.createElement(
+								'div',
+								{ className: 'form-group' },
+								React.createElement(
+									'h4',
+									null,
+									React.createElement(
+										'strong',
+										null,
+										'Topic'
+									)
+								),
+								React.createElement('input', { type: 'text', className: 'form-control', id: 'search', onChange: this.props.handleChange, required: '' }),
+								React.createElement(
+									'h4',
+									{ className: '' },
+									React.createElement(
+										'strong',
+										null,
+										'Start Year'
+									)
+								),
+								React.createElement('input', { type: 'number', className: 'form-control', id: 'start', onChange: this.props.handleChange, required: '' }),
+								React.createElement(
+									'h4',
+									{ className: '' },
+									React.createElement(
+										'strong',
+										null,
+										'End Year'
+									)
+								),
+								React.createElement('input', { type: 'number', className: 'form-control', id: 'end', onChange: this.props.handleChange, required: '' })
+							),
+							React.createElement(
+								'div',
+								{ className: 'pull-right' },
+								React.createElement(
+									'button',
+									{ type: 'button', className: 'btn btn-primary', onClick: this.props.handleClick },
+									React.createElement(
+										'h4',
+										null,
+										'Search'
+									)
+								)
+							)
+						)
+					)
+				)
+			);
+		}
+	});
+
+	// Export the componen back for use in other files
+	module.exports = Main;
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	// Include React 
+	var React = __webpack_require__(1);
+
+	var Query = React.createClass({
+	  displayName: "Query",
+
+
+	  // Here we render the function
+	  render: function render() {
+
+	    return React.createElement(
+	      "div",
+	      { className: "row" },
+	      React.createElement(
+	        "div",
+	        { className: "col-lg-12" },
+	        React.createElement(
+	          "div",
+	          { className: "panel panel-primary" },
+	          React.createElement(
+	            "div",
+	            { className: "panel-heading" },
+	            React.createElement(
+	              "h1",
+	              { className: "panel-title" },
+	              React.createElement(
+	                "strong",
+	                null,
+	                React.createElement("i", { className: "nyt-newspaper", "aria-hidden": "true" }),
+	                React.createElement(
+	                  "span",
+	                  null,
+	                  " Query"
+	                )
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            "div",
+	            { className: "panel-body" },
+	            React.createElement(
+	              "form",
+	              null,
+	              React.createElement(
+	                "div",
+	                { className: "form-group" },
+	                React.createElement(
+	                  "h4",
+	                  null,
+	                  React.createElement(
+	                    "strong",
+	                    null,
+	                    "Topic"
+	                  )
+	                ),
+	                React.createElement("input", { type: "text", className: "form-control", id: "search", onChange: this.props.handleChange, required: "" }),
+	                React.createElement(
+	                  "h4",
+	                  { className: "" },
+	                  React.createElement(
+	                    "strong",
+	                    null,
+	                    "Start Year"
+	                  )
+	                ),
+	                React.createElement("input", { type: "number", className: "form-control", id: "start", onChange: this.props.handleChange, required: "" }),
+	                React.createElement(
+	                  "h4",
+	                  { className: "" },
+	                  React.createElement(
+	                    "strong",
+	                    null,
+	                    "End Year"
+	                  )
+	                ),
+	                React.createElement("input", { type: "number", className: "form-control", id: "end", onChange: this.props.handleChange, required: "" })
+	              ),
+	              React.createElement(
+	                "div",
+	                { className: "pull-right" },
+	                React.createElement(
+	                  "button",
+	                  { type: "button", className: "btn btn-primary", onClick: this.props.handleClick },
+	                  React.createElement(
+	                    "h4",
+	                    null,
+	                    "Search"
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	// Export the component back for use in other files
+	module.exports = Query;
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	// Include React 
+	var React = __webpack_require__(1);
+
+	// Include React Components
+	//var SaveItem = require('./ResultsChildren/SaveItem');
+
+	var Results = React.createClass({
+	  displayName: "Results",
+
+
+	  // Here we render the function
+	  render: function render() {
+
+	    return React.createElement(
+	      "div",
+	      { className: "row" },
+	      React.createElement(
+	        "div",
+	        { className: "col-lg-12" },
+	        React.createElement(
+	          "div",
+	          { className: "panel panel-primary" },
+	          React.createElement(
+	            "div",
+	            { className: "panel-heading" },
+	            React.createElement(
+	              "h1",
+	              { className: "panel-title" },
+	              React.createElement(
+	                "strong",
+	                null,
+	                React.createElement("i", { className: this.props.nyt, "aria-hidden": "true" }),
+	                React.createElement(
+	                  "span",
+	                  null,
+	                  " ",
+	                  this.props.text
+	                )
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            "div",
+	            { className: "panel-body" },
+	            React.createElement(
+	              "ul",
+	              { className: "list-group" },
+	              this.props.nyt
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	// Export the component back for use in other files
+	module.exports = Results;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	// Include React 
+	var React = __webpack_require__(1);
+
+	// Include React Components
+	var Query = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./SearchChildren/Query\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var Results = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./SearchChildren/Results\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var SaveItem = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./SearchChildren/ResultsChildren/SaveItem\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var Notification = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./SearchChildren/Notification\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	// Helper Function
+	var helpers = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/helpers\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	var Search = React.createClass({
+	  displayName: 'Search',
+
+
+	  // Here we set a generic state associated with the text being searched for
+	  getInitialState: function getInitialState() {
+	    return {
+	      search: "",
+	      start: "",
+	      end: "",
+	      same: false,
+	      results: [],
+	      modalIsOpen: false,
+	      type: "",
+	      message: ""
+	    };
+	  },
+
+	  // This function will respond to the user input 
+	  handleChange: function handleChange(event) {
+
+	    // Here we create syntax to capture any change in text to the query terms.
+	    var newState = {};
+	    newState[event.target.id] = event.target.value;
+	    // Allows the submit button to send a request again because state has changed
+	    newState['same'] = false;
+	    this.setState(newState);
+	  },
+
+	  // This function will respond to the user click
+	  handleClick: function handleClick(event) {
+
+	    if (this.state.same === false) {
+	      // Stop submit button from sending a request again until state has changed
+	      this.setState({ same: true });
+
+	      // Make object of search parameters
+	      var terms = {
+	        search: this.state.search.trim(),
+	        start: this.state.start,
+	        end: this.state.end
+	      };
+
+	      // Check terms to catch user errors
+	      if (terms.search === "" || terms.start === "" || terms.end === "") {
+	        // Show message if search terms are empty
+	        this.message('Error', 'Please fill in all inputs.');
+	        return;
+	      } else if (terms.start < 1851 || terms.start > 2016 || terms.end < 1951 || terms.end > 2016) {
+	        // Show message if out of range
+	        this.message('Error', 'Please specify start and end date between 1851 and 2016.');
+	        return;
+	      }
+
+	      // Search for articles
+	      helpers.getArticles(terms).then(function (data) {
+	        if (data === false) {
+	          // Show message if no results found
+	          this.message('Error', 'No results found. Please refine inputs.');
+	        } else {
+	          // Save data to state
+	          this.setState({
+	            results: data
+	          });
+	        }
+	      }.bind(this));
+	    }
+	  },
+
+	  openModal: function openModal() {
+	    this.setState({ modalIsOpen: true });
+	  },
+
+	  closeModal: function closeModal() {
+	    this.setState({ modalIsOpen: false });
+	  },
+
+	  message: function message(type, text) {
+	    // Set text
+	    this.setState({
+	      type: type,
+	      message: text
+	    });
+	    // Show modal
+	    this.openModal();
+	  },
+
+	  saved: function saved(status) {
+	    if (status === 'saved') {
+	      // Show successfully saved message
+	      this.message('Successfully Saved', 'Click "Saved Articles" in navigation to review.');
+	    } else {
+	      // Show successfully saved message
+	      this.message('Error', 'Article was already saved.');
+	    }
+	    return;
+	  },
+
+	  // Here we render the function
+	  render: function render() {
+
+	    var saved = this.saved;
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Query, { handleChange: this.handleChange, handleClick: this.handleClick }),
+	      this.state.results.length !== 0 ? React.createElement(
+	        Results,
+	        { fa: 'fa fa-newspaper-o', text: 'Results' },
+	        this.state.results.map(function (result) {
+	          return React.createElement(SaveItem, {
+	            key: result._id,
+	            title: result.headline.main,
+	            url: result.web_url,
+	            date: result.pub_date,
+	            saved: saved
+	          });
+	        })
+	      ) : null,
+	      React.createElement(Notification, {
+	        modalIsOpen: this.state.modalIsOpen,
+	        openModal: this.openModal,
+	        closeModal: this.closeModal,
+	        type: this.state.type,
+	        message: this.state.message })
+	    );
+	  }
+	});
+
+	// Export the component back for use in other files
+	module.exports = Search;
+
+/***/ },
+/* 163 */,
+/* 164 */
+/***/ function(module, exports) {
+
+	"use strict";
 
 /***/ }
 /******/ ]);

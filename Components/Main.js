@@ -2,8 +2,9 @@
 var React = require('react');
 
 // Here we include all of the sub-components
-var Query = require('./Children/Query');
-var Results = require('./Children/Results');
+var Query = require('./Search/Query');
+var Results = require('./Search/Results');
+
 
 // Helper Function
 var helpers = require('./utils/helpers.js');

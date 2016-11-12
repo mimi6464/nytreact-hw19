@@ -4,8 +4,8 @@ var ReactDOM = require('react-dom');
 
 // Include the Main Component
 var Main = require('../Components/Main')
-var Search = require('../components/MainChildren/Search'); 
-var Saved = require('../components/MainChildren/SavedArticles');
+var Search = require('../Components/Search'); 
+var Saved = require('../Components/Saved');
 // This code here allows us to render our main component (in this case "Main")
 ReactDOM.render(
 
