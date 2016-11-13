@@ -2,10 +2,9 @@
 var React = require('react');
 
 // Include React Components
-var Query = require('./SearchChildren/Query');
-var Results = require('./SearchChildren/Results');
-var SaveItem = require('./SearchChildren/ResultsChildren/SaveItem');
-var Notification = require('./SearchChildren/Notification');
+var Query = require('./Search/Query');
+var Results = require('./Search/Results');
+var SaveItem = require('./Search/Results/SaveItem');
 
 // Helper Function
 var helpers = require('../utils/helpers');
@@ -55,11 +54,11 @@ var Search = React.createClass({
       // Check terms to catch user errors
       if (terms.search === "" || terms.start === "" || terms.end === "") {
         // Show message if search terms are empty
-        this.message('Error','Please fill in all inputs.');
+        this.message('Error','fill in all inputs.');
         return
-      } else if (terms.start < 1851 || terms.start > 2016 || terms.end < 1951 || terms.end > 2016) {
+      } else if (terms.start < 1900 || terms.start > 2016 || terms.end < 1951 || terms.end > 2016) {
         // Show message if out of range
-        this.message('Error','Please specify start and end date between 1851 and 2016.');
+        this.message('Error','specify start and end date between 1900 and 2016.');
         return
       }
 
@@ -68,7 +67,7 @@ var Search = React.createClass({
         .then(function(data){
           if (data === false) {
             // Show message if no results found
-            this.message('Error','No results found. Please refine inputs.');
+            this.message('Error','No results found');
           } else {
             // Save data to state
             this.setState({
@@ -100,10 +99,10 @@ var Search = React.createClass({
   saved: function(status) {
     if (status === 'saved') {
       // Show successfully saved message
-      this.message('Successfully Saved','Click "Saved Articles" in navigation to review.');
+      this.message('Successfully Saved','Click "Saved Articles"');
     } else {
       // Show successfully saved message
-      this.message('Error','Article was already saved.');
+      this.message('Error','Article saved.');
     }
     return
   },
@@ -118,7 +117,7 @@ var Search = React.createClass({
 
         <Query handleChange={this.handleChange} handleClick={this.handleClick} />
         {this.state.results.length !== 0 ? 
-          <Results fa="fa fa-newspaper-o" text="Results">
+          <Results fa="nyt-newspaper" text="Results">
             {this.state.results.map(function(result) {
               return (
                 <SaveItem 
