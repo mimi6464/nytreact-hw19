@@ -2,7 +2,7 @@
 var axios = require('axios');
 
 // NYT API
-var NYTAPI = require('./routes.js');
+var nytAPI = require('./routes.js');
 
 // Current base URL
 var baseURL = window.location.origin;
@@ -10,7 +10,7 @@ var baseURL = window.location.origin;
 // Helper Functions (in this case the only one is runQuery)
 var helpers = {
 
-  getArticles: function(){
+  getArticle: function(){
 
     var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
@@ -53,6 +53,17 @@ var helpers = {
         return false;
       })
   },
+  postSaved: function(title, date, url){
+ 
+    var newArticle = {title: title, date: date, url: url};
+    return axios.post('/api/saved', newArticle)
+      .then(function(results){
+        console.log("axios results", results._id);
+        return results._id;
+      })
+ 
+  },
+ 
 
   deleteSaved: function(id){
 

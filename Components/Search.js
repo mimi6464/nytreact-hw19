@@ -1,10 +1,10 @@
 // Include React 
 var React = require('react');
-
+var Router = require('react-router');
 // Include React Components
 var Query = require('./Search/Query');
 var Results = require('./Search/Results');
-var SaveItem = require('./Search/Results/SaveItem');
+//var SaveItem = require('./Search/Results/SaveItem');
 
 // Helper Function
 var helpers = require('../utils/helpers');
@@ -18,10 +18,10 @@ var Search = React.createClass({
       start: "",
       end: "",
       same: false,
-      results: [],
-      modalIsOpen: false,
-      type: "",
-      message: ""
+      results: {}
+      // modalIsOpen: false,
+      // type: "",
+      // message: ""
     }
   },
 

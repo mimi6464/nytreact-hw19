@@ -38,7 +38,7 @@ var Main = React.createClass({
 					if (data != this.state.results)
 					{
 
-						console.log(data);
+						console.log("Search",data);
 
 						this.setState({
 							results: data
